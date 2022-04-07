@@ -1813,7 +1813,7 @@ static int main_inner(int argc, char *argv[])
 
 
 
-int main()
+int mainz()
 {
 	vector<string> arguments = { "spirv-cross.exe", "../../vcs_vulkan_samples/source0.spv" };
 	vector<char *> argv;
