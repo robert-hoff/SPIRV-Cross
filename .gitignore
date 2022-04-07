@@ -31,6 +31,11 @@ In the Release build there are only lib files (no pdb files)
 /spirv-cross-util.dir/Release/
 
 
+# Adding TestRun project
+/TestRunSpirvCross/x64/Debug
+/TestRunSpirvCross/x64/Release
+
+
 
 
 
