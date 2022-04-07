@@ -32,8 +32,6 @@ namespace SPIRV_CROSS_NAMESPACE
 {
 ParsedIR::ParsedIR()
 {
-	printf("ParsedIR \n");
-
 	// If we move ParsedIR, we need to make sure the pointer stays fixed since the child Variant objects consume a pointer to this group,
 	// so need an extra pointer here.
 	pool_group.reset(new ObjectPoolGroup);

@@ -1102,14 +1102,12 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	if (args.cpp)
 	{
-		printf("args.cpp\n");
 		compiler.reset(new CompilerCPP(std::move(spirv_parser.get_parsed_ir())));
 		if (args.cpp_interface_name)
 			static_cast<CompilerCPP *>(compiler.get())->set_interface_name(args.cpp_interface_name);
 	}
 	else if (args.msl)
 	{
-		printf("args.msl\n");
 		compiler.reset(new CompilerMSL(std::move(spirv_parser.get_parsed_ir())));
 
 		auto *msl_comp = static_cast<CompilerMSL *>(compiler.get());
@@ -1169,12 +1167,10 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	}
 	else if (args.hlsl)
 	{
-		printf("args.hlsl\n");
 		compiler.reset(new CompilerHLSL(std::move(spirv_parser.get_parsed_ir())));
 	}
 	else
 	{
-		printf("Else - (not args.cpp, args.msl or args.hlsl)\n");
 		combined_image_samplers = !args.vulkan_semantics;
 		if (!args.vulkan_semantics || args.vulkan_glsl_disable_ext_samplerless_texture_functions)
 			build_dummy_sampler = true;
@@ -1183,7 +1179,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	if (!args.variable_type_remaps.empty())
 	{
-		printf("!args.variable_type_remaps.empty()\n");
 		auto remap_cb = [&](const SPIRType &, const string &name, string &out) -> void {
 			for (const VariableTypeRemap &remap : args.variable_type_remaps)
 				if (name == remap.variable_name)
@@ -1192,7 +1187,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 		compiler->set_variable_type_remap_callback(std::move(remap_cb));
 	}
 
-	printf("auto &masked loops \n");
 	for (auto &masked : args.masked_stage_outputs)
 		compiler->mask_stage_output_by_location(masked.first, masked.second);
 	for (auto &masked : args.masked_stage_builtins)
@@ -1200,7 +1194,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	for (auto &rename : args.entry_point_rename)
 		compiler->rename_entry_point(rename.old_name, rename.new_name, rename.execution_model);
 
-	printf("entry_points \n");
 	auto entry_points = compiler->get_entry_points_and_stages();
 	auto entry_point = args.entry;
 	ExecutionModel model = ExecutionModelMax;
@@ -1313,7 +1306,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	// Set HLSL specific options.
 	if (args.hlsl)
 	{
-		printf("args.hlsl \n");
 		auto *hlsl = static_cast<CompilerHLSL *>(compiler.get());
 		auto hlsl_opts = hlsl->get_hlsl_options();
 		if (args.set_shader_model)
@@ -1351,7 +1343,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	if (build_dummy_sampler)
 	{
-		printf("build_dummy_sampler \n");
 		uint32_t sampler = compiler->build_dummy_sampler_for_combined_images();
 		if (sampler != 0)
 		{
@@ -1364,40 +1355,34 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	ShaderResources res;
 	if (args.remove_unused)
 	{
-		printf("compiler->set_enabled_interface_variables(..) \n");
 		auto active = compiler->get_active_interface_variables();
 		res = compiler->get_shader_resources(active);
 		compiler->set_enabled_interface_variables(std::move(active));
 	}
 	else
 	{
-		printf("compiler->get_shader_resources() \n");
 		res = compiler->get_shader_resources();
 	}
 
 	if (args.flatten_ubo)
 	{
-		printf("args.flatten_ubo \n");
 		for (auto &ubo : res.uniform_buffers)
 			compiler->flatten_buffer_block(ubo.id);
 		for (auto &ubo : res.push_constant_buffers)
 			compiler->flatten_buffer_block(ubo.id);
 	}
 
-	printf("remap_pls \n");
 	auto pls_inputs = remap_pls(args.pls_in, res.stage_inputs, &res.subpass_inputs);
 	auto pls_outputs = remap_pls(args.pls_out, res.stage_outputs, nullptr);
 	compiler->remap_pixel_local_storage(std::move(pls_inputs), std::move(pls_outputs));
 
 	for (auto &ext : args.extensions)
 	{
-		printf("for-loop args.extensions \n");
 		compiler->require_extension(ext);
 	}
 
 	for (auto &remap : args.remaps)
 	{
-		printf("for-loop args.remaps \n");
 		if (remap_generic(*compiler, res.stage_inputs, remap))
 			continue;
 		if (remap_generic(*compiler, res.stage_outputs, remap))
@@ -1408,7 +1393,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	for (auto &rename : args.interface_variable_renames)
 	{
-		printf("for-loop args.interface_variable_renames \n");
 		if (rename.storageClass == StorageClassInput)
 			spirv_cross_util::rename_interface_variable(*compiler, res.stage_inputs, rename.location,
 			                                            rename.variable_name);
@@ -1424,7 +1408,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	if (combined_image_samplers)
 	{
-		printf("combined_image_samplers \n");
 		compiler->build_combined_image_samplers();
 		if (args.combined_samplers_inherit_bindings)
 		{
@@ -1440,14 +1423,12 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	if (args.hlsl)
 	{
 
-		printf("args.hlsl near end 1 \n");
 		auto *hlsl_compiler = static_cast<CompilerHLSL *>(compiler.get());
 		hlsl_compiler->remap_num_workgroups_builtin();
 	}
 
 	if (args.hlsl)
 	{
-		printf("args.hlsl near end 2 \n");
 		for (auto &remap : args.hlsl_attr_remap)
 			static_cast<CompilerHLSL *>(compiler.get())->add_vertex_attribute_remap(remap);
 	}
@@ -1457,7 +1438,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 
 	if (args.dump_resources)
 	{
-		printf("args.dump_resources \n");
 		compiler->update_active_builtins();
 		print_resources(*compiler, res);
 		print_push_constant_resources(*compiler, res.push_constant_buffers);
