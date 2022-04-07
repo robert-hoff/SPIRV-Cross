@@ -21,17 +21,18 @@
  *  2. The MIT License, found at <http://opensource.org/licenses/MIT>.
  */
 
-#include "spirv_cpp.hpp"
-#include "spirv_cross_util.hpp"
-#include "spirv_glsl.hpp"
-#include "spirv_hlsl.hpp"
-#include "spirv_msl.hpp"
-#include "spirv_parser.hpp"
-#include "spirv_reflect.hpp"
+#include "../spirv_cpp.hpp"
+#include "../spirv_cross_util.hpp"
+#include "../spirv_glsl.hpp"
+#include "../spirv_hlsl.hpp"
+#include "../spirv_msl.hpp"
+#include "../spirv_parser.hpp"
+#include "../spirv_reflect.hpp"
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <stdexcept>
@@ -39,8 +40,8 @@
 #include <unordered_set>
 
 #ifdef _WIN32
-#include <io.h>
 #include <fcntl.h>
+#include <io.h>
 #endif
 
 #ifdef HAVE_SPIRV_CROSS_GIT_VERSION
@@ -297,10 +298,17 @@ static void print_resources(const Compiler &compiler, spv::StorageClass storage,
 		auto &type = compiler.get_type(res.value_type_id);
 		switch (type.basetype)
 		{
-		case SPIRType::Float: basetype = "float"; break;
-		case SPIRType::Int: basetype = "int"; break;
-		case SPIRType::UInt: basetype = "uint"; break;
-		default: break;
+		case SPIRType::Float:
+			basetype = "float";
+			break;
+		case SPIRType::Int:
+			basetype = "int";
+			break;
+		case SPIRType::UInt:
+			basetype = "uint";
+			break;
+		default:
+			break;
 		}
 
 		uint32_t array_size = 0;
@@ -326,16 +334,30 @@ static void print_resources(const Compiler &compiler, spv::StorageClass storage,
 		string builtin_str;
 		switch (res.builtin)
 		{
-		case spv::BuiltInPosition: builtin_str = "Position"; break;
-		case spv::BuiltInPointSize: builtin_str = "PointSize"; break;
-		case spv::BuiltInCullDistance: builtin_str = "CullDistance"; break;
-		case spv::BuiltInClipDistance: builtin_str = "ClipDistance"; break;
-		case spv::BuiltInTessLevelInner: builtin_str = "TessLevelInner"; break;
-		case spv::BuiltInTessLevelOuter: builtin_str = "TessLevelOuter"; break;
-		default: builtin_str = string("builtin #") + to_string(res.builtin);
+		case spv::BuiltInPosition:
+			builtin_str = "Position";
+			break;
+		case spv::BuiltInPointSize:
+			builtin_str = "PointSize";
+			break;
+		case spv::BuiltInCullDistance:
+			builtin_str = "CullDistance";
+			break;
+		case spv::BuiltInClipDistance:
+			builtin_str = "ClipDistance";
+			break;
+		case spv::BuiltInTessLevelInner:
+			builtin_str = "TessLevelInner";
+			break;
+		case spv::BuiltInTessLevelOuter:
+			builtin_str = "TessLevelOuter";
+			break;
+		default:
+			builtin_str = string("builtin #") + to_string(res.builtin);
 		}
 
-		fprintf(stderr, "Builtin %s (%s) (active: %s).\n", builtin_str.c_str(), type_str.c_str(), active ? "yes" : "no");
+		fprintf(stderr, "Builtin %s (%s) (active: %s).\n", builtin_str.c_str(), type_str.c_str(),
+		        active ? "yes" : "no");
 	}
 	fprintf(stderr, "=============\n\n");
 }
@@ -1174,7 +1196,7 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 	}
 	else
 	{
-		printf("Else - (not args.cpp, args.msl or args.hlsl)\n");
+		printf("ELSEELSE (not args.cpp, args.msl or args.hlsl)\n");
 		combined_image_samplers = !args.vulkan_semantics;
 		if (!args.vulkan_semantics || args.vulkan_glsl_disable_ext_samplerless_texture_functions)
 			build_dummy_sampler = true;
@@ -1433,7 +1455,8 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 		// Give the remapped combined samplers new names.
 		for (auto &remap : compiler->get_combined_image_samplers())
 		{
-			compiler->set_name(remap.combined_id, join("SPIRV_Cross_Combined", compiler->get_name(remap.image_id), compiler->get_name(remap.sampler_id)));
+			compiler->set_name(remap.combined_id, join("SPIRV_Cross_Combined", compiler->get_name(remap.image_id),
+			                                           compiler->get_name(remap.sampler_id)));
 		}
 	}
 
@@ -1452,7 +1475,6 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 			static_cast<CompilerHLSL *>(compiler.get())->add_vertex_attribute_remap(remap);
 	}
 
-
 	auto ret = compiler->compile();
 
 	if (args.dump_resources)
@@ -1465,16 +1487,25 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> 
 		print_capabilities_and_extensions(*compiler);
 	}
 
-
-	// R: prints the source!
+	// PRINTS THE SOURCE !!!
 	// cout << ret;
 
 	return ret;
 }
 
 
+
+
+
+
+// Main method
+
 static int main_inner(int argc, char *argv[])
 {
+	// printf("MAIN METHOD! \n");
+	// cout << argv[0];
+	// return 0;
+
 	CLIArguments args;
 	CLICallbacks cbs;
 
@@ -1512,15 +1543,15 @@ static int main_inner(int argc, char *argv[])
 	cbs.add("--glsl-emit-push-constant-as-ubo", [&args](CLIParser &) { args.glsl_emit_push_constant_as_ubo = true; });
 	cbs.add("--glsl-emit-ubo-as-plain-uniforms", [&args](CLIParser &) { args.glsl_emit_ubo_as_plain_uniforms = true; });
 	cbs.add("--glsl-force-flattened-io-blocks", [&args](CLIParser &) { args.glsl_force_flattened_io_blocks = true; });
-	cbs.add("--glsl-ovr-multiview-view-count", [&args](CLIParser &parser) { args.glsl_ovr_multiview_view_count = parser.next_uint(); });
+	cbs.add("--glsl-ovr-multiview-view-count",
+	        [&args](CLIParser &parser) { args.glsl_ovr_multiview_view_count = parser.next_uint(); });
 	cbs.add("--glsl-remap-ext-framebuffer-fetch", [&args](CLIParser &parser) {
 		uint32_t input_index = parser.next_uint();
 		uint32_t color_attachment = parser.next_uint();
 		args.glsl_ext_framebuffer_fetch.push_back({ input_index, color_attachment });
 	});
-	cbs.add("--glsl-ext-framebuffer-fetch-noncoherent", [&args](CLIParser &) {
-		args.glsl_ext_framebuffer_fetch_noncoherent = true;
-	});
+	cbs.add("--glsl-ext-framebuffer-fetch-noncoherent",
+	        [&args](CLIParser &) { args.glsl_ext_framebuffer_fetch_noncoherent = true; });
 	cbs.add("--vulkan-glsl-disable-ext-samplerless-texture-functions",
 	        [&args](CLIParser &) { args.vulkan_glsl_disable_ext_samplerless_texture_functions = true; });
 	cbs.add("--disable-storage-image-qualifier-deduction",
@@ -1624,9 +1655,8 @@ static int main_inner(int argc, char *argv[])
 	cbs.add("--msl-fixed-subgroup-size",
 	        [&args](CLIParser &parser) { args.msl_fixed_subgroup_size = parser.next_uint(); });
 	cbs.add("--msl-force-sample-rate-shading", [&args](CLIParser &) { args.msl_force_sample_rate_shading = true; });
-	cbs.add("--msl-combined-sampler-suffix", [&args](CLIParser &parser) {
-		args.msl_combined_sampler_suffix = parser.next_string();
-	});
+	cbs.add("--msl-combined-sampler-suffix",
+	        [&args](CLIParser &parser) { args.msl_combined_sampler_suffix = parser.next_string(); });
 	cbs.add("--extension", [&args](CLIParser &parser) { args.extensions.push_back(parser.next_string()); });
 	cbs.add("--rename-entry-point", [&args](CLIParser &parser) {
 		auto old_name = parser.next_string();
@@ -1721,9 +1751,8 @@ static int main_inner(int argc, char *argv[])
 		args.masked_stage_builtins.push_back(masked_builtin);
 	});
 
-	cbs.add("--force-recompile-max-debug-iterations", [&](CLIParser &parser) {
-		args.force_recompile_max_debug_iterations = parser.next_uint();
-	});
+	cbs.add("--force-recompile-max-debug-iterations",
+	        [&](CLIParser &parser) { args.force_recompile_max_debug_iterations = parser.next_uint(); });
 
 	cbs.add("--relax-nan-checks", [&](CLIParser &) { args.relax_nan_checks = true; });
 
@@ -1782,6 +1811,31 @@ static int main_inner(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
+
+
+int main()
+{
+	vector<string> arguments = { "spirv-cross.exe", "../../vcs_vulkan_samples/source0.spv" };
+	vector<char *> argv;
+	for (const auto &arg : arguments)
+	{
+		argv.push_back((char *)arg.data());
+	}
+	argv.push_back(nullptr);
+	int argc = argv.size() - 1;
+	try
+	{
+		return main_inner(argc, argv.data());
+	}
+	catch (const std::exception &e)
+	{
+		fprintf(stderr, "SPIRV-Cross threw an exception: %s\n", e.what());
+		return EXIT_FAILURE;
+	}
+}
+
+
+/*
 int main(int argc, char *argv[])
 {
 #ifdef SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
@@ -1799,3 +1853,4 @@ int main(int argc, char *argv[])
 	}
 #endif
 }
+*/

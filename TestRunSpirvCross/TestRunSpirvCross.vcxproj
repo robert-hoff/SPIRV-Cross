@@ -139,7 +139,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main_copy.cpp" />
     <ClCompile Include="TestRunSpirvCross.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\spirv-cross-c.vcxproj">
+      <Project>{834a0e3d-7dbc-3c43-a56a-6fdd3a2b43c5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-core.vcxproj">
+      <Project>{0be91614-bf74-3981-a88f-a5e86c56cf77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-cpp.vcxproj">
+      <Project>{1419e44a-9fb1-3a1f-b2dc-258ed6957502}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-glsl.vcxproj">
+      <Project>{957422b6-df8c-377d-9151-05510391000a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-hlsl.vcxproj">
+      <Project>{6bb75d5d-4c39-3c30-a9ff-7db2cdd5d606}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-msl.vcxproj">
+      <Project>{dd6a3e02-3bba-32f6-9ad6-fa68fcd9cff8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-reflect.vcxproj">
+      <Project>{619ac11d-7fb4-32cc-a89a-b1acbbbf1395}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross-util.vcxproj">
+      <Project>{b62c3409-7b62-3ab5-8075-422f856e9d92}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\spirv-cross.vcxproj">
+      <Project>{a50f2ab9-bff4-3d91-bbfc-17221a96887e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -110,6 +110,8 @@ void Parser::parse()
 		instr.op = spirv[offset] & 0xffff;
 		instr.count = (spirv[offset] >> 16) & 0xffff;
 
+		// printf("instr.op = %4d (0x%02x) instr.count = %d \n", instr.op, instr.op, instr.count);
+
 		if (instr.count == 0)
 			SPIRV_CROSS_THROW("SPIR-V instructions cannot consume 0 words. Invalid SPIR-V file.");
 
