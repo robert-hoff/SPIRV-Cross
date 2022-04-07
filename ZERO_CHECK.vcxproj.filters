@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="X:\checkouts\SPIRV-Cross\CMakeFiles\096ce3169779b150d55f7049ef4470e0\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{644A6CB8-F73B-3D6B-B56B-398350BA957B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
