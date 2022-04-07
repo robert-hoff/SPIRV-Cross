@@ -3,52 +3,30 @@
 #include "../spirv_parser.hpp"
 #include <fstream>
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <utility>
 #include <vector>
 
 using namespace std;
 using namespace spirv_cross;
 extern vector<uint32_t> readFileAsUints(const char *filename);
 extern vector<char> readFileAsBytes(const char *filename);
-extern int tryDecompile();
 
 int main()
 {
 	try
 	{
-		return tryDecompile();
+		vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/source0.spv");
+		// vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/source1.spv");
+		spirv_cross::CompilerGLSL glsl(move(spirv_binary));
+		spirv_cross::ShaderResources resources = glsl.get_shader_resources();
+		glsl.build_combined_image_samplers();
+		string source = glsl.compile();
+		cout << source;
 	}
 	catch (const std::exception &e)
 	{
 		fprintf(stderr, "SPIRV-Cross threw an exception: %s\n", e.what());
 		return EXIT_FAILURE;
 	}
-	return 0;
-}
-
-int tryDecompile()
-{
-	// Read SPIR-V from disk or similar.
-	vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/source0.spv");
-	spirv_cross::CompilerGLSL glsl(move(spirv_binary));
-	spirv_cross::ShaderResources resources = glsl.get_shader_resources(); //spirv is parsed, we can perform reflection
-	for (auto &resource : resources.sampled_images) // Get all sampled images in the shader.
-	{
-		unsigned set = glsl.get_decoration(resource.id, spv::DecorationDescriptorSet);
-		unsigned binding = glsl.get_decoration(resource.id, spv::DecorationBinding);
-		printf("Image %s at set = %u, binding = %u\n", resource.name.c_str(), set, binding);
-		glsl.unset_decoration(resource.id,
-		                      spv::DecorationDescriptorSet); // Modify the decoration to prepare it for GLSL.
-		glsl.set_decoration(resource.id, spv::DecorationBinding,
-		                    set * 16 + binding); // Some arbitrary remapping if we want.
-	}
-	spirv_cross::CompilerGLSL::Options options;
-	options.version = 450;
-	options.es = true;
-	glsl.set_common_options(options);
-	string source = glsl.compile(); // Compile to GLSL, ready to give to GL driver.
 	return 0;
 }
 
@@ -72,7 +50,6 @@ vector<char> readFileAsBytes(const char *filename)
 	file.seekg(0, ios::end);
 	fileSize = file.tellg();
 	file.seekg(0, ios::beg);
-
 	vector<char> vec;
 	vec.reserve(fileSize);
 	vec.insert(vec.begin(), istream_iterator<char>(file), istream_iterator<char>()); // read the file
