@@ -1,20 +1,40 @@
 #pragma once
+#include <iostream>
+#include <vector>
 
-class Attempt
+using namespace std;
+
+class SpirvDecompiler
 {
-	int x;
+	vector<uint32_t> spirv_binary;
+	string result;
+	int result_len;
 
 public:
-	Attempt(int x);
-	int adding(int y);
-
+	SpirvDecompiler();
+	void PushUInt32(uint32_t val);
+	void Parse();
+	int GetDataLength();
+	char GetChar(int i);
 };
-extern "C" __declspec(dllexport) void *Create(int x)
-{
-	return (void *)new Attempt(x);
-}
-extern "C" __declspec(dllexport) int AttemptAdd(Attempt * a, int y)
-{
-	return a->adding(y);
-}
 
+extern "C" __declspec(dllexport) void *CreateSpirvDecompiler()
+{
+	return (void *)new SpirvDecompiler();
+}
+extern "C" __declspec(dllexport) void PushUInt32(SpirvDecompiler *a, uint32_t y)
+{
+	a->PushUInt32(y);
+}
+extern "C" __declspec(dllexport) void Parse(SpirvDecompiler *a)
+{
+	return a->Parse();
+}
+extern "C" __declspec(dllexport) int GetDataLength(SpirvDecompiler *a)
+{
+	return a->GetDataLength();
+}
+extern "C" __declspec(dllexport) char GetChar(SpirvDecompiler *a, int i)
+{
+	return a->GetChar(i);
+}

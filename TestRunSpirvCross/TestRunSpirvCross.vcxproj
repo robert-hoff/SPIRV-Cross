@@ -170,6 +170,9 @@
     <ProjectReference Include="..\spirv-cross.vcxproj">
       <Project>{a50f2ab9-bff4-3d91-bbfc-17221a96887e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SpirvCrossDll\SpirvCrossDll.vcxproj">
+      <Project>{77e4eb29-e034-47c6-983d-b75fc9849032}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
