@@ -216,21 +216,36 @@ static inline std::string convert_to_string(int32_t value)
 	// INT_MIN is ... special on some backends. If we use a decimal literal, and negate it, we
 	// could accidentally promote the literal to long first, then negate.
 	// To workaround it, emit int(0x80000000) instead.
-	if (value == std::numeric_limits<int32_t>::min())
-		return "int(0x80000000)";
-	else
-		return std::to_string(value);
+	//
+	// R: for some reason the ::min() causes "C2589 illegal token on right side of '::'" when building from the dll
+	// commented this statement out
+	//if (value == std::numeric_limits<int32_t>::min())
+	//{
+	//	return "int(0x80000000)";
+	//}
+	//else
+	//{
+	return std::to_string(value);
+	//}
 }
+
 
 static inline std::string convert_to_string(int64_t value, const std::string &int64_type, bool long_long_literal_suffix)
 {
 	// INT64_MIN is ... special on some backends.
 	// If we use a decimal literal, and negate it, we might overflow the representable numbers.
 	// To workaround it, emit int(0x80000000) instead.
-	if (value == std::numeric_limits<int64_t>::min())
-		return join(int64_type, "(0x8000000000000000u", (long_long_literal_suffix ? "ll" : "l"), ")");
-	else
-		return std::to_string(value) + (long_long_literal_suffix ? "ll" : "l");
+
+	// R: for some reason the ::min() causes "C2589 illegal token on right side of '::'" when building from the dll
+	// commented this statement out
+	//if (value == std::numeric_limits<int64_t>::min())
+	//{
+	//	return join(int64_type, "(0x8000000000000000u", (long_long_literal_suffix ? "ll" : "l"), ")");
+	//}
+	//else
+	//{
+	return std::to_string(value) + (long_long_literal_suffix ? "ll" : "l");
+	// }
 }
 
 // Allow implementations to set a convenient standard precision
