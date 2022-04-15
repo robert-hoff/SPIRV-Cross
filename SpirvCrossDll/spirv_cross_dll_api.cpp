@@ -20,6 +20,7 @@ void SpirvDecompiler::Parse()
 {
 	CompilerGLSL glsl(move(this->spirv_binary));
 	ShaderResources resources = glsl.get_shader_resources();
+	glsl.build_dummy_sampler_for_combined_images();
 	glsl.build_combined_image_samplers();
 	string source = glsl.compile();
 	this->result = source;
