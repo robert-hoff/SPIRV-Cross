@@ -1,6 +1,54 @@
 # Copyright 2016-2021 The Khronos Group Inc.
 # SPDX-License-Identifier: Apache-2.0
 
+# Project files
+*.filters
+/Release/
+/CMakeFiles/
+*.cmake
+*.vcxproj
+
+# Generated files on Debug build
+/x64/Debug
+/Debug/
+/spirv-cross.dir/Debug/
+/spirv-cross-c.dir/Debug/
+/spirv-cross-core.dir/Debug/
+/spirv-cross-cpp.dir/Debug/
+/spirv-cross-glsl.dir/Debug/
+/spirv-cross-hlsl.dir/Debug/
+/spirv-cross-msl.dir/Debug/
+/spirv-cross-reflect.dir/Debug/
+/spirv-cross-util.dir/Debug/
+
+# Generated files on Release build
+/x64/Release
+In the Release build there are only lib files (no pdb files)
+/Release/
+*.obj files here
+/spirv-cross.dir/Release/
+/spirv-cross-c.dir/Release/
+/spirv-cross-core.dir/Release/
+/spirv-cross-cpp.dir/Release/
+/spirv-cross-glsl.dir/Release/
+/spirv-cross-hlsl.dir/Release/
+/spirv-cross-msl.dir/Release/
+/spirv-cross-reflect.dir/Release/
+/spirv-cross-util.dir/Release/
+
+# TestRunSpirCross project
+/TestRunSpirvCross/x64/Debug
+/TestRunSpirvCross/x64/Release
+/TestRunSpirvCross/Release
+/TestRunSpirvCross/Debug
+
+#  SpirvCrossDll project
+/SpirvCrossDll/x64/Debug
+/SpirvCrossDll/x64/Release
+
+
+
+
 *.o
 *.d
 *.txt
