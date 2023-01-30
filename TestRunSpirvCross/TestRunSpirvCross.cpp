@@ -14,9 +14,10 @@ int main()
 {
 	try
 	{
-		vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/sample0.spv");
+		// vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/sample0.spv");
 		// vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/sample1.spv");
 		// vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/sample2.spv");
+		vector<uint32_t> spirv_binary = readFileAsUints("../../vcs_vulkan_samples/sample3.spv");
 		spirv_cross::CompilerGLSL glsl(move(spirv_binary));
 		spirv_cross::ShaderResources resources = glsl.get_shader_resources();
 		glsl.build_dummy_sampler_for_combined_images();
